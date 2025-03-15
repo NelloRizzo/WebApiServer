@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "jwt.secret",
+    "type": "java.lang.String",
+    "description": "Chiave per la crittografia del Json Web Token"
+  },
+  {
+    "name": "jwt.expirationms",
+    "type": "java.lang.Long",
+    "description": "Scadenza del token"
+  }
+]}

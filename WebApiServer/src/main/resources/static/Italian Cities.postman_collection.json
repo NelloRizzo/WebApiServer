@@ -1,0 +1,86 @@
+{
+	"info": {
+		"_postman_id": "97de1317-3871-4750-a8fa-501f98c27a5c",
+		"name": "Italian Cities",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2190542"
+	},
+	"item": [
+		{
+			"name": "All Cities",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/cities",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"cities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Populate",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/cities/populate",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"cities",
+						"populate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All Provinces",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/cities/provinces",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"cities",
+						"provinces"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All Cities in Province",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/cities/by-prov/rm",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"cities",
+						"by-prov",
+						"rm"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
