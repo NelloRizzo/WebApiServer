@@ -23,7 +23,7 @@ import lombok.ToString;
 public class Region {
 	@Id
 	@EqualsAndHashCode.Include
-	private int id;
+	private Integer id;
 	@Column(length = 50, nullable = false, unique = true)
 	private String name;
 	@ManyToOne

@@ -23,7 +23,7 @@ import lombok.ToString;
 public class City {
 	@Id
 	@EqualsAndHashCode.Include
-	private int id;
+	private Integer id;
 	@Column(length = 80, nullable = false)
 	private String name;
 	@Column(length = 4, nullable = false, unique = true)

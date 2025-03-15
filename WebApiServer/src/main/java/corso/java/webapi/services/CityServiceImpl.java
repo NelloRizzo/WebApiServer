@@ -16,6 +16,7 @@ import corso.java.webapi.repositories.geo.AreasRepository;
 import corso.java.webapi.repositories.geo.CitiesRepository;
 import corso.java.webapi.repositories.geo.ProvincesRepository;
 import corso.java.webapi.repositories.geo.RegionsRepository;
+import corso.java.webapi.services.exceptions.ServiceException;
 import corso.java.webapi.services.loader.CitiesLoaderService;
 
 @Service
@@ -52,11 +53,9 @@ public class CityServiceImpl implements CityService {
 				c.setProvince(provincesRepo.findById(c.getProvince().getId()).orElseThrow());
 				return c;
 			}).forEach(citiesRepo::save);
-		} catch (RuntimeException e) {
-			throw e;
 		} catch (Exception e) {
 			log.error("Exception populating database", e);
-			throw new RuntimeException(e);
+			throw new ServiceException(e);
 		}
 	}
 

@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @Builder(setterPrefix = "with")
 public class ArticleDto {
-	private int id;
+	private Integer id;
 	private LocalDateTime createdAt;
 	private String title;
 	private String content;

@@ -11,10 +11,10 @@ import corso.java.webapi.services.dto.CommentDto;
 public interface BlogService {
 	Optional<ArticleDto> publishArticle(UserDetails user, ArticleDto articleDto);
 	Optional<ArticleDto> updateArticle(UserDetails user, ArticleDto articleDto);
-	Optional<ArticleDto> deleteArticle(UserDetails user, int id);
+	Optional<ArticleDto> deleteArticle(UserDetails user, Integer id);
 	Optional<CommentDto> writeComment(UserDetails user, CommentDto commentDto);
 	Optional<CommentDto> updateComment(UserDetails user, CommentDto commentDto);
-	Optional<CommentDto> deleteComment(UserDetails user, int id);
-	Optional<ArticleDto> getArticle(int id);
+	Optional<CommentDto> deleteComment(UserDetails user, Integer id);
+	Optional<ArticleDto> getArticle(Integer id);
 	List<ArticleDto> getArticles();
 }

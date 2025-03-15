@@ -23,7 +23,7 @@ import lombok.ToString;
 public class Province  {
 	@Id
 	@EqualsAndHashCode.Include
-	private int id;
+	private Integer id;
 	@Column(length = 50, nullable = false, unique = true)
 	private String name;
 	@Column(length = 2, nullable = false, unique = true)

@@ -17,6 +17,10 @@ import corso.java.webapi.repositories.blog.CommentsRepository;
 import corso.java.webapi.repositories.blog.UsersRepository;
 import corso.java.webapi.services.dto.ArticleDto;
 import corso.java.webapi.services.dto.CommentDto;
+import corso.java.webapi.services.exceptions.EntityNotFoundException;
+import corso.java.webapi.services.exceptions.OperationUnauthorizedException;
+import corso.java.webapi.services.exceptions.ServiceException;
+import corso.java.webapi.servicesexceptions.UserNotFoundException;
 
 @Service
 public class BlogServiceImpl implements BlogService {
@@ -32,7 +36,8 @@ public class BlogServiceImpl implements BlogService {
 	@Override
 	public Optional<ArticleDto> publishArticle(UserDetails user, ArticleDto articleDto) {
 		try {
-			var u = usersRepository.findByUsername(user.getUsername()).orElseThrow();
+			var u = usersRepository.findByUsername(user.getUsername())
+					.orElseThrow(() -> new UserNotFoundException(user.getUsername()));
 			var article = Article.builder() //
 					.withTitle(articleDto.getTitle()) //
 					.withContent(articleDto.getContent()) //
@@ -47,18 +52,19 @@ public class BlogServiceImpl implements BlogService {
 					.withAuthor(a.getAuthor().getUsername()) //
 					.withCreatedAt(a.getCreatedAt()) //
 					.build());
-		} catch (RuntimeException e) {
+		} catch (ServiceException e) {
 			throw e;
 		} catch (Exception e) {
 			log.error("Exception publishing article", e);
-			throw new RuntimeException(e);
+			throw new ServiceException(e);
 		}
 	}
 
 	@Override
 	public Optional<CommentDto> writeComment(UserDetails user, CommentDto commentDto) {
 		try {
-			var u = usersRepository.findByUsername(user.getUsername()).orElseThrow();
+			var u = usersRepository.findByUsername(user.getUsername())
+					.orElseThrow(() -> new UserNotFoundException(user.getUsername()));
 			var c = commentsRepository.save(Comment.builder() //
 					.withContent(commentDto.getContent()) //
 					.withAuthor(u) //
@@ -70,18 +76,19 @@ public class BlogServiceImpl implements BlogService {
 					.withAuthor(c.getAuthor().getUsername()) //
 					.withCreatedAt(c.getCreatedAt()) //
 					.build());
-		} catch (RuntimeException e) {
+		} catch (ServiceException e) {
 			throw e;
 		} catch (Exception e) {
 			log.error("Exception publishing comment", e);
-			throw new RuntimeException(e);
+			throw new ServiceException(e);
 		}
 	}
 
 	@Override
-	public Optional<ArticleDto> getArticle(int id) {
+	public Optional<ArticleDto> getArticle(Integer id) {
 		try {
-			var article = articlesRepository.findById(id).orElseThrow();
+			var article = articlesRepository.findById(id)
+					.orElseThrow(() -> new EntityNotFoundException("Article not found", id.toString()));
 			return Optional.of(ArticleDto.builder() //
 					.withId(article.getId()) //
 					.withTitle(article.getTitle()) //
@@ -96,11 +103,11 @@ public class BlogServiceImpl implements BlogService {
 							.build() //
 					).toList()) //
 					.build());
-		} catch (RuntimeException e) {
+		} catch (ServiceException e) {
 			throw e;
 		} catch (Exception e) {
 			log.error("Exception getting article", e);
-			throw new RuntimeException(e);
+			throw new ServiceException(e);
 		}
 	}
 
@@ -123,20 +130,18 @@ public class BlogServiceImpl implements BlogService {
 					).toList()) //
 					.build()) //
 					.toList();
-		} catch (RuntimeException e) {
-			throw e;
 		} catch (Exception e) {
 			log.error("Exception getting articles", e);
-			throw new RuntimeException(e);
+			throw new ServiceException(e);
 		}
 	}
 
 	@Override
 	public Optional<ArticleDto> updateArticle(UserDetails user, ArticleDto articleDto) {
 		try {
-			var article = articlesRepository.findById(articleDto.getId()).orElseThrow();
+			var article = articlesRepository.findById(articleDto.getId()).orElseThrow(() -> new EntityNotFoundException("Article not found", articleDto.getId().toString()));
 			if (!user.getUsername().equals(articleDto.getAuthor())) {
-				throw new RuntimeException("User not allowed to update article");
+				throw new OperationUnauthorizedException("User not allowed to update article");
 			}
 			article.setTitle(articleDto.getTitle());
 			article.setContent(articleDto.getContent());
@@ -149,20 +154,20 @@ public class BlogServiceImpl implements BlogService {
 					.withAuthor(a.getAuthor().getUsername()) //
 					.withCreatedAt(a.getCreatedAt()) //
 					.build());
-		} catch (RuntimeException e) {
+		} catch (ServiceException e) {
 			throw e;
 		} catch (Exception e) {
 			log.error("Exception updating article", e);
-			throw new RuntimeException(e);
+			throw new ServiceException(e);
 		}
 	}
 
 	@Override
-	public Optional<ArticleDto> deleteArticle(UserDetails user, int id) {
+	public Optional<ArticleDto> deleteArticle(UserDetails user, Integer id) {
 		try {
-			var a = articlesRepository.findById(id).orElseThrow();
+			var a = articlesRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Article not found", id.toString()));
 			if (!user.getUsername().equals(a.getAuthor().getUsername())) {
-				throw new RuntimeException("User not allowed to update article");
+				throw new OperationUnauthorizedException("User not allowed to delete article");
 			}
 			articlesRepository.delete(a);
 			return Optional.of(ArticleDto.builder() //
@@ -172,20 +177,20 @@ public class BlogServiceImpl implements BlogService {
 					.withAuthor(a.getAuthor().getUsername()) //
 					.withCreatedAt(a.getCreatedAt()) //
 					.build());
-		} catch (RuntimeException e) {
+		} catch (ServiceException e) {
 			throw e;
 		} catch (Exception e) {
 			log.error("Exception deleting article", e);
-			throw new RuntimeException(e);
+			throw new ServiceException(e);
 		}
 	}
 
 	@Override
 	public Optional<CommentDto> updateComment(UserDetails user, CommentDto commentDto) {
 		try {
-			var c = commentsRepository.findById(commentDto.getId()).orElseThrow();
+			var c = commentsRepository.findById(commentDto.getId()).orElseThrow(() -> new EntityNotFoundException("Comment not found", commentDto.getId().toString()));
 			if (c.getAuthor().getUsername().equals(user.getUsername())) {
-				throw new RuntimeException("User not allowed to update comment");
+				throw new OperationUnauthorizedException("User not allowed to update comment");
 			}
 			c.setContent(commentDto.getContent());
 			c.setCreatedAt(LocalDateTime.now());
@@ -196,20 +201,20 @@ public class BlogServiceImpl implements BlogService {
 					.withAuthor(c.getAuthor().getUsername()) //
 					.withCreatedAt(c.getCreatedAt()) //
 					.build());
-		} catch (RuntimeException e) {
+		} catch (ServiceException e) {
 			throw e;
 		} catch (Exception e) {
 			log.error("Exception updating comment", e);
-			throw new RuntimeException(e);
+			throw new ServiceException(e);
 		}
 	}
 
 	@Override
-	public Optional<CommentDto> deleteComment(UserDetails user, int id) {
+	public Optional<CommentDto> deleteComment(UserDetails user, Integer id) {
 		try {
-			var c = commentsRepository.findById(id).orElseThrow();
+			var c = commentsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Comment not found", id.toString()));
 			if (c.getAuthor().getUsername().equals(user.getUsername())) {
-				throw new RuntimeException("User not allowed to update comment");
+				throw new OperationUnauthorizedException("User not allowed to update comment");
 			}
 			commentsRepository.delete(c);
 			return Optional.of(CommentDto.builder() //
@@ -218,11 +223,11 @@ public class BlogServiceImpl implements BlogService {
 					.withAuthor(c.getAuthor().getUsername()) //
 					.withCreatedAt(c.getCreatedAt()) //
 					.build());
-		} catch (RuntimeException e) {
+		} catch (ServiceException e) {
 			throw e;
 		} catch (Exception e) {
 			log.error("Exception deleting comment", e);
-			throw new RuntimeException(e);
+			throw new ServiceException(e);
 		}
 	}
 

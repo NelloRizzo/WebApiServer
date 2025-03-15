@@ -14,6 +14,7 @@ import corso.java.webapi.entities.geo.Area;
 import corso.java.webapi.entities.geo.City;
 import corso.java.webapi.entities.geo.Province;
 import corso.java.webapi.entities.geo.Region;
+import corso.java.webapi.services.exceptions.ServiceException;
 
 @Service
 @Scope("singleton")
@@ -59,7 +60,7 @@ public class JsonCitiesLoaderService implements CitiesLoaderService {
 			}
 		} catch (Exception e) {
 			log.error("Exception reading from resource file", e);
-			throw new RuntimeException("Exception reading from resource file");
+			throw new ServiceException("Exception reading from resource file");
 		}
 	}
 

@@ -7,8 +7,8 @@ import lombok.Data;
 @Data
 @Builder(setterPrefix = "with")
 public class CommentDto {
-	private int id;
-	private int articleId;
+	private Integer id;
+	private Integer articleId;
 	private String author;
 	private String content;
 	private LocalDateTime createdAt;

@@ -22,7 +22,7 @@ import lombok.ToString;
 public class Area {
 	@Id
 	@EqualsAndHashCode.Include
-	private int id;
+	private Integer id;
 	@Column(length = 20, nullable = false, unique = true)
 	private String name;
 
